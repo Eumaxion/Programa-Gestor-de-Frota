@@ -63,7 +63,6 @@ class Window:
         teste1 = self.db_consulta(query, parametros)
         resposta = teste1.fetchall()
 
-        print(resposta)
         if len(resposta) != 0:
             self.aba_menu()
         else:
@@ -103,11 +102,11 @@ class Menu(Frame):
         b_manutencao.place(x=50, y=300)
         self.indicador_manutencao = Label(self.frame, text='', bg="#ADD8E6")
         self.indicador_manutencao.place(x=10, y=290, width=10, height=60)
-        b_frota = Button(self.frame, text="ADICIONAR\nVEICULOS", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
-                         command=lambda: self.indicar(self.indicador_frota, self.frota_page))
-        b_frota.place(x=50, y=400)
-        self.indicador_frota = Label(self.frame, text='', bg="#ADD8E6")
-        self.indicador_frota.place(x=10, y=400, width=10, height=60)
+        b_sair = Button(self.frame, text="SAIR", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
+                        command=lambda: self.indicar(self.indicador_sair, self.frota_page))
+        b_sair.place(x=50, y=400)
+        self.indicador_sair = Label(self.frame, text='', bg="#ADD8E6")
+        self.indicador_sair.place(x=10, y=390, width=10, height=60)
 
         self.frame.pack(side=LEFT)  # posicionando
 
@@ -180,7 +179,7 @@ class Menu(Frame):
     def manutencao_page(self):
         manutencao = Frame(self.frame2)
         frame_manutencao = LabelFrame(manutencao, text="VEICULOS EM ALERTA:", font="sylfaen 16 bold", width=700, height=600)
-        self.label_manutencao = Label(frame_manutencao, text='''Veiculos com com 50 utilizações ou mais deverão ser enviados para manutenção, 
+        self.label_manutencao = Label(frame_manutencao, text='''Veiculos com 50 utilizações ou mais deverão ser enviados para manutenção, 
         após a regularização do veiculo o administrador deve atualizar o status na base de dados.''')
         self.tabela_3 = ttk.Treeview(frame_manutencao, columns=('utilizacoes', 'placa', 'tipo', 'disponivel', 'disponivel em'), show='headings')
         self.tabela_3.column('utilizacoes', minwidth=0, width=100)
@@ -197,10 +196,14 @@ class Menu(Frame):
         self.tabela_manutencao()
         ################--- ATUALIZAR MANUTENÇÃO ---#####################
         self.mensagem_atualizar = Label(frame_manutencao, text='')
-        self.atualizar_manutencao = Button(frame_manutencao, text="Manutenção Concluida", font="sylfaen 12 bold", command= self.atualizar_manutencao)
+        self.manutencao_em_andamento = Button(frame_manutencao, text="Enviado para manutenção", font='sylfaen 12 bold',
+                                              command=self.em_manutencao)
+        self.concluir_manutencao = Button(frame_manutencao, text="Manutenção Concluida", font="sylfaen 12 bold",
+                                          command= self.atualizar_manutencao)
         self.label_manutencao.grid()
         self.mensagem_atualizar.grid()
-        self.atualizar_manutencao.grid()
+        self.manutencao_em_andamento.grid()
+        self.concluir_manutencao.grid()
         frame_manutencao.pack()
         manutencao.pack()
 
@@ -213,18 +216,38 @@ class Menu(Frame):
     def atualizar_manutencao(self):
         self.mensagem_atualizar['text'] = ''
         try:
-            self.tabela_3.item(self.tabela_3.selection())['text'][0]
-        except IndexError as erro:
+            item_selecionado = self.tabela_3.selection()[0]
+            placa_item = self.tabela_3.item(item_selecionado, 'values')
+            if placa_item[3] == 'em manutenção':
+                query = 'UPDATE Automoveis SET disponibilidade = "disponivel", utilizacoes = 0 WHERE placa = ?'
+                self.db_consulta(query, (placa_item[1],))
+                self.mensagem_atualizar['text'] = f'Manutenção do veiculo de placa {placa_item[1]} concluida com sucesso!'
+                self.tabela_manutencao()
+            elif placa_item[3] == 'disponivel':
+                self.mensagem_atualizar['text'] = 'O status do veiculo precisa estar "em manutenção" antes de conclui-la.'
+            else:
+                self.mensagem_atualizar['text'] = 'O veiculo está em uso, não é possivel atualizar o status.'
+        except IndexError as e:
             self.mensagem_atualizar['text'] = 'Por favor, selecione um produto.'
             return
-        num_manutencoes = self.tabela_3.item(self.tabela_3.selection())['placa']
-        aaa = num_manutencoes.get()
-        query = 'UPDATE Automoveis SET utilizacoes = 0 WHERE placa = ?'
-        parametros = aaa
-        self.db_consulta(query,parametros)
-        self.tabela_manutencao()
 
-
+    def em_manutencao(self):
+        self.mensagem_atualizar['text'] = ''
+        try:
+            item_selecionado = self.tabela_3.selection()[0]
+            placa_item = self.tabela_3.item(item_selecionado, 'values')
+            if placa_item[3] == 'disponivel':
+                query = 'UPDATE Automoveis SET disponibilidade = "em manutenção"  WHERE placa = ?'
+                self.db_consulta(query, (placa_item[1],))
+                self.mensagem_atualizar['text'] = f'O satus do veiculo de placa {placa_item[1]} foi alterado para "Em andamento"!'
+                self.tabela_manutencao()
+            elif placa_item[3] == 'em manutenção':
+                self.mensagem_atualizar['text'] = 'O veiculo ja encontra-se em manutenção.'
+            else:
+                self.mensagem_atualizar['text'] = 'O veiculo está em uso, não é possivel atualizar o status.'
+        except IndexError as e:
+            self.mensagem_atualizar['text'] = 'Por favor, selecione um produto.'
+            return
     def frota_page(self):
         teste = Frame(self.frame2)
         lb = Label(teste, text="ADICIONAR FROTA", font="arial 30")
@@ -237,7 +260,7 @@ class Menu(Frame):
 
     def remover_indicador(self):
         self.indicador_disponiveis.config(bg='#ADD8E6')
-        self.indicador_frota.config(bg='#ADD8E6')
+        self.indicador_sair.config(bg='#ADD8E6')
         self.indicador_manutencao.config(bg='#ADD8E6')
         self.indicador_legalizar.config(bg='#ADD8E6')
 
