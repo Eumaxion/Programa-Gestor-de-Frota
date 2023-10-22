@@ -1,11 +1,11 @@
 from tkinter import ttk
 from tkinter import *
-import datetime
+from datetime import *
 import sqlite3
 
-'''################## CLASSE FROTA/ JANELA INICIAL ###################################################'''
+'''################## CLASSE Window/ JANELA INICIAL ###################################################'''
 class Window:
-    db_usuarios = 'database/Usuarios.db'  # variavel para acessar o banco de dados de usuarios
+    db_auto = 'database/ManagerLuxury.db'# variavel para acessar o banco de dados de usuarios
     def __init__(self, root): #construtor recebe a rota
         self.janela = root #janela inicial vai receber root
         self.janela.title(
@@ -127,7 +127,7 @@ class Window:
         self.janela.destroy()
 
     def db_consulta(self, consulta, parametros=()): #função para acessar a base de dados e fazer consulta de usuario
-        with sqlite3.connect(self.db_usuarios) as con:
+        with sqlite3.connect(self.db_auto) as con:
             cursor = con.cursor()
             resultado = cursor.execute(consulta, parametros)
             con.commit()
@@ -151,7 +151,7 @@ class Window:
 
 '''################################################# CLASSE MENU ###################################################'''
 class Menu(Frame):
-    db_auto = 'database/Automoveis.db'  # variavel para acessar o banco de dados da frota
+    db_auto = 'database/ManagerLuxury.db'  # variavel para acessar o banco de dados da frota
     def __init__(self, master):
         super().__init__()
         self['bd'] = 2
@@ -192,21 +192,19 @@ class Menu(Frame):
         veiculos_frame = LabelFrame(self.frame2, text="FROTA", font="sylfaen 16 bold")
 
         '''############################--- TABELA VEICULOS --- ############################3'''
-        self.tabela = ttk.Treeview(veiculos_frame, columns=('placa', 'tipo', 'disponivel', 'utilizacoes', 'disponivel em', 'data_de_aquisicao', 'legalizacao'), height=17, show='headings')
+        self.tabela = ttk.Treeview(veiculos_frame, columns=('ID', 'placa', 'tipo', 'categoria', 'disponivel', 'disponivel em'), height=17, show='headings')
+        self.tabela.column('ID', minwidth=0, width=40)
         self.tabela.column('placa', minwidth=0,width=70)
         self.tabela.column('tipo', minwidth=0, width=60)
+        self.tabela.column('categoria', minwidth=0, width=80)
         self.tabela.column('disponivel', minwidth=0, width=110)
-        self.tabela.column('utilizacoes', minwidth=0, width=100)
         self.tabela.column('disponivel em', minwidth=0, width=120)
-        self.tabela.column('data_de_aquisicao', minwidth=0, width=100)
-        self.tabela.column('legalizacao', minwidth=0, width=120)
-        self.tabela.heading('placa', text='Placa')
-        self.tabela.heading('tipo', text='Tipo')
-        self.tabela.heading('disponivel', text='Disponibilidade')
-        self.tabela.heading('utilizacoes', text='nº de utilizações')
-        self.tabela.heading('disponivel em', text='Status/Disponivel em:', anchor='w')
-        self.tabela.heading('data_de_aquisicao', text='Data de Aquisição')
-        self.tabela.heading('legalizacao', text='Ultima legalização')
+        self.tabela.heading('ID', text='ID')
+        self.tabela.heading('placa', text='PLACA')
+        self.tabela.heading('tipo', text='TIPO')
+        self.tabela.heading('categoria', text='CATEGORIA')
+        self.tabela.heading('disponivel', text='STATUS')
+        self.tabela.heading('disponivel em', text='DISPONIVEL EM:', anchor='w')
         self.tabela.grid(row=0)
         self.frota()
         veiculos_frame.grid(sticky='n')
@@ -214,12 +212,12 @@ class Menu(Frame):
         '''#######################---ALERTA DE FROTA---##############################'''
         self.alerta_frota = Label(veiculos_frame, text='', font="sylfaen 18 bold", fg="red")
         self.alerta_frota.grid()
-        query_frota = "SELECT placa FROM Automoveis WHERE disponibilidade == 'disponivel'"
+        query_frota = "SELECT placa FROM automoveis WHERE disponibilidade == 'disponivel'"
         consulta_frota = self.db_consulta(query_frota)
         contador = 0
         for item in consulta_frota:
             contador += 1
-        if contador <= 5:
+        if contador <= 15: #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             self.alerta_frota['text'] = f'Alerta, existem apenas {contador} veiculos disponiveis!'''
 
         '''#####################---ADICIONAR NOVO VEICULO--- #####################'''
@@ -232,11 +230,15 @@ class Menu(Frame):
         self.opcao_moto = Radiobutton(adicionar_veiculo, text='Moto', variable=self.tipo_veiculo, value=1)
         self.label_aquisicao = Label(adicionar_veiculo, text="Data de aquisição:", font="sylfaen 12 bold" )
         self.nova_aquisicao = Entry(adicionar_veiculo)
+        self.nova_aquisicao.insert(0, "DD/MM/AAAA")
         self.check_valor = IntVar()
         self.check_legalizado = Checkbutton(adicionar_veiculo, text="Veiculo legalizado", variable=self.check_valor, offvalue=0, onvalue=1, command=self.checkCheckButton)
         self.data_da_legalizacao = Label(adicionar_veiculo, text="Data da legalização:", font="sylfaen 12 bold")
         self.inserir_data_da_legalizacao = Entry(adicionar_veiculo)
-        self.inserir_dados = Button(adicionar_veiculo, text="Confirmar", font="sylfaen 12 bold", bd=5, relief="raised", bg='#B0E0E6', command= lambda: self.mascara_inserir_veiculo(self.nova_placa.get(), self.tipo_veiculo.get(), self.nova_aquisicao.get(), self.check_valor.get(), self.inserir_data_da_legalizacao.get()))
+        self.inserir_data_da_legalizacao.insert(0, "DD/MM/AAAA")
+        self.label_categoria = Label (adicionar_veiculo, text="Categoria", font="sylfaen 12 bold")
+        self.categoria = Spinbox(adicionar_veiculo, values=("Gold", "Silver", "Economico"), wrap=True)
+        self.inserir_dados = Button(adicionar_veiculo, text="Confirmar", font="sylfaen 12 bold", bd=5, relief="raised", bg='#B0E0E6', command= lambda: self.mascara_inserir_veiculo(self.nova_placa.get(), self.tipo_veiculo.get(), self.nova_aquisicao.get(), self.check_valor.get(), self.inserir_data_da_legalizacao.get(), self.categoria.get()))
         self.mensagem_add = Label(adicionar_veiculo, text="", font="sylfaen 12 bold", fg="red")
 
         self.label_placa.grid(row=0, column=0, sticky='w')
@@ -249,6 +251,8 @@ class Menu(Frame):
         self.nova_aquisicao.grid(row=1, column=1, )
         self.check_legalizado.grid(row=1, column=2)
         self.data_da_legalizacao.grid(row=2, column=0, sticky='e')
+        self.label_categoria.grid(row=2, column=2)
+        self.categoria.grid(row=2, column=3)
         self.inserir_dados.grid(row=3, column=1, columnspan=4, sticky='e')
         self.mensagem_add.grid(row=3, column=0, columnspan=3)
         adicionar_veiculo.grid()
@@ -258,7 +262,7 @@ class Menu(Frame):
             self.inserir_data_da_legalizacao.grid(row=2, column=1, sticky='e')
         else:
             self.inserir_data_da_legalizacao.grid_forget()
-    def mascara_inserir_veiculo(self, placa, opcao, aquisicao, check, data_legalizacao):
+    def mascara_inserir_veiculo(self, placa, opcao, aquisicao, check, data_legalizacao, categoria):
         placa_vazia = True if placa == '' else False
         data_aquisicao_vazia = True if opcao == '' else False
         if placa_vazia:
@@ -272,60 +276,68 @@ class Menu(Frame):
             if data_legalizacao_vazia:
                 self.mensagem_add['text'] = "Insira a data de legalização!"
                 return
-            sem_barra_legalizacao = data_legalizacao.isnumeric()
-            if sem_barra_legalizacao:
-                data_legalizacao = f"{data_legalizacao[0:2]}/{data_legalizacao[2:4]}/{data_legalizacao[4:]}"
+            else:
+                data_legalizacao = datetime.strptime(data_legalizacao, '%d/%m/%Y')
         else:
             data_legalizacao = None
-        sem_barra_aquisicao = aquisicao.isnumeric()
-        if sem_barra_aquisicao:
-            aquisicao = f"{aquisicao[0:2]}/{aquisicao[2:4]}/{aquisicao[4:]}"
-        self.inserir_veiculo(placa, opcao, aquisicao, data_legalizacao)
+        aquisicao = datetime.strptime(aquisicao, '%d/%m/%Y')
+        self.inserir_veiculo(placa, opcao, aquisicao, data_legalizacao, categoria)
         return
 
-    def inserir_veiculo(self, placa, opcao, aquisicao, data_legalizacao):
+    def inserir_veiculo(self, placa, opcao, aquisicao, data_legalizacao, categoria):
         disponibilidade = 'disponivel'
         utilizacoes = 0
         ultima_legalizacao = data_legalizacao
-        query_inserir = 'INSERT INTO automoveis (placa, tipo, disponibilidade, utilizacoes, data_de_aquisicao, primeira_legalizacao, ultima_legalização) VALUES (?,?,?,?,?,?,?)'
-        parametros_inserir = placa, opcao, disponibilidade, utilizacoes, aquisicao, data_legalizacao, ultima_legalizacao
+        proxima_legalizacao = None
+        if data_legalizacao == None:
+            dias = timedelta(days=30)
+            proxima_legalizacao = aquisicao + dias
+            proxima_legalizacao = proxima_legalizacao.strftime('%d/%m/%Y')
+        else:
+            anos = timedelta(days=1826)
+            proxima_legalizacao = ultima_legalizacao + anos
+            proxima_legalizacao = proxima_legalizacao.strftime('%d/%m/%Y')
+        aquisicao = aquisicao.strftime('%d/%m/%Y')
+        data_legalizacao = data_legalizacao.strftime('%d/%m/%Y')
+        ultima_legalizacao = ultima_legalizacao.strftime('%d/%m/%Y')
+        query_inserir = 'INSERT INTO automoveis (placa, tipo, categoria, disponibilidade, utilizacoes, data_de_aquisicao, primeira_legalizacao, ultima_legalizacao, proxima_legalizacao) VALUES (?,?,?,?,?,?,?,?,?)'
+        parametros_inserir = placa, opcao, categoria, disponibilidade, utilizacoes, aquisicao, data_legalizacao, ultima_legalizacao, proxima_legalizacao
         self.db_consulta(query_inserir, parametros_inserir)
         self.mensagem_add['text'] = "Veiculo inserido com sucesso!"
         self.frota()
     def frota(self):
         self.tabela.delete(*self.tabela.get_children())
-        query = 'SELECT placa, tipo, disponibilidade, utilizacoes, disponivel_em, data_de_aquisicao, ultima_legalização FROM automoveis ORDER BY disponibilidade ASC'
+        query = 'SELECT id_veiculo, placa, tipo, categoria, disponibilidade, disponivel_em FROM automoveis ORDER BY id_veiculo ASC'
         informacoes = self.db_consulta(query)
 
         for item in informacoes:
-            placa, tipo, disponibilidade, utilizacoes, disponivel_em, data_de_aquisicao, ultima_legalizacao = item
+            id, placa, tipo, categoria, disponibilidade, disponivel_em = item
             nome_tipo = 'Carro' if int(tipo) == 0 else 'Moto'
-            nome_disponivel_em = disponibilidade if disponivel_em == None else disponivel_em
-            nome_ultima_legalizacao = "Necessita legalizar" if ultima_legalizacao == None else ultima_legalizacao
+            nome_disponivel_em = disponibilidade if disponivel_em == '' else disponivel_em
             self.tabela.insert('', 'end', values=(
-            placa, nome_tipo, disponibilidade, utilizacoes, nome_disponivel_em, data_de_aquisicao, nome_ultima_legalizacao))
+            id, placa, nome_tipo, categoria, disponibilidade, nome_disponivel_em))
 
     def legalizar_page(self):
         legalizar = Frame(self.frame2)
         frame_legalizar = LabelFrame(legalizar, text="LEGALIZAR", font="sylfaen 16 bold")
-        self.tv_legalizar = ttk.Treeview(frame_legalizar, columns=('placa', 'tipo', 'data_de_aquisicao', 'primeira_legalizacao', 'ultima_legalização'), show='headings')
+        self.tv_legalizar = ttk.Treeview(frame_legalizar, columns=('placa', 'tipo', 'data_de_aquisicao', 'primeira_legalizacao', 'ultima_legalizacao'), show='headings')
         self.tv_legalizar.column('placa', minwidth=0, width=70)
         self.tv_legalizar.column('tipo', minwidth=0, width=70)
         self.tv_legalizar.column('data_de_aquisicao', minwidth=0, width=150)
         self.tv_legalizar.column('primeira_legalizacao', minwidth=0, width=150)
-        self.tv_legalizar.column('ultima_legalização', minwidth=0, width=150)
+        self.tv_legalizar.column('ultima_legalizacao', minwidth=0, width=150)
         self.tv_legalizar.heading('placa', text='Placa')
         self.tv_legalizar.heading('tipo', text='Tipo')
         self.tv_legalizar.heading('data_de_aquisicao', text='Data de aquisição')
         self.tv_legalizar.heading('primeira_legalizacao', text='Primeira legalização')
-        self.tv_legalizar.heading('ultima_legalização', text='Ultima legalização')
+        self.tv_legalizar.heading('ultima_legalizacao', text='Ultima legalização')
         self.tv_legalizar.grid()
         self.tabela_legalizar()
         frame_legalizar.pack(expand=TRUE, fill=BOTH, pady=20, padx=30)
         legalizar.pack(expand=TRUE, fill=BOTH)
     def tabela_legalizar(self):
         self.tv_legalizar.delete(*self.tv_legalizar.get_children())
-        query = 'SELECT placa, tipo, data_de_aquisicao, primeira_legalizacao, ultima_legalização FROM automoveis ORDER BY ultima_legalização ASC'
+        query = 'SELECT placa, tipo, data_de_aquisicao, primeira_legalizacao, ultima_legalizacao FROM automoveis ORDER BY ultima_legalizacao ASC'
         informacoes = self.db_consulta(query)
 
         for item in informacoes:
@@ -376,7 +388,7 @@ class Menu(Frame):
 
     def tabela_manutencao(self):
         self.tv_manutencao.delete(*self.tv_manutencao.get_children())
-        query = 'SELECT utilizacoes,placa, tipo, disponibilidade, disponivel_em FROM automoveis WHERE utilizacoes >= 50 ORDER BY utilizacoes DESC'
+        query = 'SELECT utilizacoes,placa, tipo, disponibilidade, disponivel_em FROM automoveis WHERE utilizacoes >= 10 ORDER BY utilizacoes DESC'
         informacoes = self.db_consulta(query)
         for item in informacoes:
             self.tv_manutencao.insert('', 'end', values=item)
@@ -386,7 +398,7 @@ class Menu(Frame):
             item_selecionado = self.tv_manutencao.selection()[0]
             placa_item = self.tv_manutencao.item(item_selecionado, 'values')
             if placa_item[3] == 'em manutenção':
-                query = 'UPDATE Automoveis SET disponibilidade = "disponivel", utilizacoes = 0 WHERE placa = ?'
+                query = 'UPDATE automoveis SET disponibilidade = "disponivel", utilizacoes = 0 WHERE placa = ?'
                 self.db_consulta(query, (placa_item[1],))
                 self.mensagem_atualizar['text'] = f'Manutenção do veiculo de placa {placa_item[1]} concluida com sucesso!'
                 self.tabela_manutencao()
@@ -404,7 +416,7 @@ class Menu(Frame):
             item_selecionado = self.tv_manutencao.selection()[0]
             placa_item = self.tv_manutencao.item(item_selecionado, 'values')
             if placa_item[3] == 'disponivel':
-                query = 'UPDATE Automoveis SET disponibilidade = "em manutenção"  WHERE placa = ?'
+                query = 'UPDATE automoveis SET disponibilidade = "em manutenção"  WHERE placa = ?'
                 self.db_consulta(query, (placa_item[1],))
                 self.mensagem_atualizar['text'] = f'O satus do veiculo de placa {placa_item[1]} foi alterado para "Em andamento"!'
                 self.tabela_manutencao()
