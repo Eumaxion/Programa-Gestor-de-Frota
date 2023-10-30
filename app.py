@@ -1,3 +1,4 @@
+import datetime
 import re
 import tkinter
 from tkinter import ttk
@@ -19,11 +20,11 @@ class Window:
 
         self.frame_inicial = Frame(self.janela) #Criando o frame inicial que vai receber a tela para login ou sair
         self.frame = LabelFrame(self.frame_inicial, text="Sistema de Gerenciamento de Frota Luxury Wheels", bd=8, relief="groove", font="sylfaen 15 bold", bg="#E6E6FA") #frame com login ou sair
-        self.login = Button(self.frame, text="Login", font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.login) #criando botão de login que vai abrir a janela para inserir os dados de autenticação
+        self.login = Button(self.frame, text="Login", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.login) #criando botão de login que vai abrir a janela para inserir os dados de autenticação
         self.login.grid(row=0, column=0, pady=20, padx=200) #posicionando botão login
-        self.cadastrar = Button(self.frame, text="Cadastrar usuário", font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.cadastrar)
+        self.cadastrar = Button(self.frame, text="Cadastrar usuário", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.cadastrar)
         self.cadastrar.grid(row=1, column=0)
-        self.exit = Button(self.frame, text="Sair", font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.exit) #criando botão de sair
+        self.exit = Button(self.frame, text="Sair", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.exit) #criando botão de sair
         self.exit.grid(row=2, column=0, pady= 20) #posicionando botão de sair
         self.frame.grid(pady=200, padx=200) #posicionando frame
         self.frame_inicial.grid() #posicionado frame inicial
@@ -46,7 +47,7 @@ class Window:
         insert_senha = Entry(frame_cadastro, width=45)
         info_senha = Label(frame_cadastro, text="A senha deve conter no minimo\n8 digitos com letras e numeros.", font="sylfaen 12 italic")
         self.mensagem_cadastro=Label(frame_cadastro, text='', font="sylfaen 13 bold", fg="red")
-        button_insert = Button(frame_cadastro, text="Confirmar dados", font="sylfaen 13 bold", command=lambda: self.verificar_cadastro(insert_id.get(), insert_usuario.get(), insert_senha.get(), insert_nome.get()))
+        button_insert = Button(frame_cadastro, text="Confirmar dados", cursor='hand2', font="sylfaen 13 bold", command=lambda: self.verificar_cadastro(insert_id.get(), insert_usuario.get(), insert_senha.get(), insert_nome.get()))
 
         id_usuario.grid(row=0)
         insert_id.grid(row=0, column=1)
@@ -116,7 +117,7 @@ class Window:
         insert_usuario.grid(row=0, column=1)
         insert_senha = Entry(frame_login, show='*')
         insert_senha.grid(row=1, column=1)
-        confirmar = Button(frame_login, text="acessar", bd=5, relief="raised", bg='#B0E0E6', font="sylfaen 15 bold",
+        confirmar = Button(frame_login, text="acessar", bd=5, cursor='hand2', relief="raised", bg='#B0E0E6', font="sylfaen 15 bold",
                            command= lambda: self.Validacao(insert_usuario.get(), insert_senha.get()))
         self.mensagem = Label(frame_login, text='')
         self.mensagem.grid(row=2, columnspan=2)
@@ -160,22 +161,22 @@ class Menu(Frame):
 
         self.frame = Frame(self, bg='#ADD8E6', highlightbackground='black', highlightthickness=2, width=200, height=600)  # frame com os botões
         # criando e posicionando botões do menu
-        b_veic_disp = Button(self.frame, text="VEICULOS", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
+        b_veic_disp = Button(self.frame, text="VEICULOS", cursor='hand2', font="sylfaen 13 bold", bd=0, background="#ADD8E6",
                              command=lambda: self.indicar(self.indicador_disponiveis, self.veiculos_page))
         b_veic_disp.place(x=50, y=100)
         self.indicador_disponiveis = Label(self.frame, text='', bg="#ADD8E6")
         self.indicador_disponiveis.place(x=10, y=90, width=10, height=60)
-        b_legalizar = Button(self.frame, text="LEGALIZAR", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
+        b_legalizar = Button(self.frame, text="LEGALIZAR", cursor='hand2', font="sylfaen 13 bold", bd=0, background="#ADD8E6",
                              command=lambda: self.indicar(self.indicador_legalizar, self.legalizar_page))
         b_legalizar.place(x=50, y=200)
         self.indicador_legalizar = Label(self.frame, text='', bg="#ADD8E6")
         self.indicador_legalizar.place(x=10, y=190, width=10, height=60)
-        b_manutencao = Button(self.frame, text="MANUTENÇÃO", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
+        b_manutencao = Button(self.frame, text="MANUTENÇÃO", cursor='hand2', font="sylfaen 13 bold", bd=0, background="#ADD8E6",
                               command=lambda: self.indicar(self.indicador_manutencao, self.manutencao_page))
         b_manutencao.place(x=50, y=300)
         self.indicador_manutencao = Label(self.frame, text='', bg="#ADD8E6")
         self.indicador_manutencao.place(x=10, y=290, width=10, height=60)
-        b_sair = Button(self.frame, text="SAIR", font="sylfaen 13 bold", bd=0, background="#ADD8E6",
+        b_sair = Button(self.frame, text="SAIR", cursor='hand2', font="sylfaen 13 bold", bd=0, background="#ADD8E6",
                         command=lambda: self.indicar(self.indicador_sair, self.page_sair))
         b_sair.place(x=50, y=400)
         self.indicador_sair = Label(self.frame, text='', bg="#ADD8E6")
@@ -211,13 +212,13 @@ class Menu(Frame):
         veiculos_frame.pack(expand=TRUE, fill=BOTH, pady=0, padx=44)
 
         '''#######################---ALERTA DE FROTA---##############################'''
-        frame_alerta = LabelFrame(veiculos_frame, text='Alerta de veiculos disponiveis', font="sylfaen 12 bold")
+        self.frame_alerta = LabelFrame(veiculos_frame, text='Alerta de veiculos disponiveis', font="sylfaen 12 bold")
         contador_gold = 0
         contador_silver = 0
         contador_economico = 0
-        self.alerta_frota1 = Label(frame_alerta, text='', font="sylfaen 12 italic")
-        self.alerta_frota2 = Label(frame_alerta, text='', font="sylfaen 12 italic")
-        self.alerta_frota3 = Label(frame_alerta, text='', font="sylfaen 12 italic")
+        self.alerta_frota1 = Label(self.frame_alerta, text='', font="sylfaen 12 italic")
+        self.alerta_frota2 = Label(self.frame_alerta, text='', font="sylfaen 12 italic")
+        self.alerta_frota3 = Label(self.frame_alerta, text='', font="sylfaen 12 italic")
         query_frota_gold = "SELECT placa FROM automoveis WHERE disponibilidade == 'disponivel' AND categoria = 'Gold'"
         consulta_frota_gold = self.db_consulta(query_frota_gold)
         for item in consulta_frota_gold:
@@ -254,7 +255,7 @@ class Menu(Frame):
         '''#######################---BOTÃO DE PESQUISA---##############################'''
         frame_pesquisar = Frame(veiculos_frame)
         icone_pesquisa = tkinter.PhotoImage(file='recursos/magnifying_glass.png')
-        self.buttom_pesquisar = Button(frame_pesquisar, text='Pesquisar\nveiculo', font="sylfaen 10 bold", image=icone_pesquisa,
+        self.buttom_pesquisar = Button(frame_pesquisar, cursor='hand2', text='Pesquisar\nveiculo', font="sylfaen 10 bold", image=icone_pesquisa,
                                        compound='left', background='#B0E0E6', command=self.pesquisar_veiculo)
         self.buttom_pesquisar.image = icone_pesquisa
 
@@ -262,11 +263,12 @@ class Menu(Frame):
         self.alerta_frota2.grid(row=1, column=0, sticky='w')
         self.alerta_frota3.grid(row=2, column=0, sticky='w')
         self.buttom_pesquisar.grid(row=0, sticky='we')
-        frame_alerta.grid(row=1, sticky='we')
+        self.frame_alerta.grid(row=1, sticky='we')
         frame_pesquisar.grid(row=1, column=0, sticky='e', padx=10)
 
 
         '''#####################---ADICIONAR NOVO VEICULO--- #####################'''
+        #Criando Layout
         adicionar_veiculo = LabelFrame(veiculos_frame, text="Inserir novo veiculo", font="sylfaen 16 bold")
         self.label_placa = Label(adicionar_veiculo, text="Placa:", font="sylfaen 12 bold" )
         self.nova_placa = Entry(adicionar_veiculo)
@@ -284,9 +286,9 @@ class Menu(Frame):
         self.inserir_data_da_legalizacao.insert(0, "DD/MM/AAAA")
         self.label_categoria = Label (adicionar_veiculo, text="Categoria", font="sylfaen 12 bold")
         self.categoria = Spinbox(adicionar_veiculo, values=("Gold", "Silver", "Economico"), wrap=True)
-        self.inserir_dados = Button(adicionar_veiculo, text="Confirmar", font="sylfaen 12 bold", bd=5, relief="raised", bg='#B0E0E6', command= lambda: self.mascara_inserir_veiculo(self.nova_placa.get(), self.tipo_veiculo.get(), self.nova_aquisicao.get(), self.check_valor.get(), self.inserir_data_da_legalizacao.get(), self.categoria.get()))
+        self.inserir_dados = Button(adicionar_veiculo, text="Confirmar", cursor='hand2', font="sylfaen 12 bold", bd=5, relief="raised", bg='#B0E0E6', command= lambda: self.mascara_inserir_veiculo(self.nova_placa.get(), self.tipo_veiculo.get(), self.nova_aquisicao.get(), self.check_valor.get(), self.inserir_data_da_legalizacao.get(), self.categoria.get()))
         self.mensagem_add = Label(adicionar_veiculo, text="", font="sylfaen 12 bold", fg="red")
-
+        #Posicionando layout
         self.label_placa.grid(row=0, column=0, sticky='w')
         self.nova_placa.grid(row=0, column=1)
         self.label_tipo.grid(row=0, column=2)
@@ -304,12 +306,13 @@ class Menu(Frame):
         adicionar_veiculo.grid()
         veiculo.pack(expand=TRUE, fill=BOTH)
 
-    def checkCheckButton(self):
+    def checkCheckButton(self): #função para aparecer a entry de inserir data se marcar a opção 'já legalizado'.
         if self.check_valor.get() == 1:
             self.inserir_data_da_legalizacao.grid(row=2, column=1, sticky='e')
         else:
             self.inserir_data_da_legalizacao.grid_forget()
     def mascara_inserir_veiculo(self, placa, opcao, aquisicao, check, data_legalizacao, categoria):
+        #Regras de verificação de dados para inserir veiculo.
         self.mensagem_add['text'] = ""
         placa_vazia = True if placa == '' else False
         padrao = r'\d{2}/\d{2}/\d{4}'
@@ -317,19 +320,33 @@ class Menu(Frame):
         if placa_vazia:
             self.mensagem_add['text'] = "Campo 'Placa' obrigatório!"
             return
+        if self.testar_placa(placa) == True:
+            self.mensagem_add['text'] = "Veiculo já cadastrado!"
+            return
         if not padrao_data_aquisicao:
             self.mensagem_add['text'] = "Data de aquisição incorreta!"
             return
         if check == 1:
             padrao_data_legalizacao = re.match(padrao, data_legalizacao)
             if not padrao_data_legalizacao:
-                self.mensagem_add['text'] = "Data de legalização incorreta!"
+                self.mensagem_add['text'] = "Data de legalização inválida!"
                 return
             else:
-                data_legalizacao = datetime.strptime(data_legalizacao, '%d/%m/%Y')
+                try:
+                    data_legalizacao = datetime.strptime(data_legalizacao, '%d/%m/%Y')
+                except ValueError as e:
+                    self.mensagem_add['text'] = "Data de legalização inválida!"
+                    return
         else:
             data_legalizacao = None
-        aquisicao = datetime.strptime(aquisicao, '%d/%m/%Y')
+        try:
+            aquisicao = datetime.strptime(aquisicao, '%d/%m/%Y')
+        except ValueError as e:
+            self.mensagem_add['text'] = "Data de legalização inválida!"
+            return
+        if categoria != 'Gold' and categoria != 'Silver' and categoria != 'Economico':
+            self.mensagem_add['text'] = "Categoria inválida!"
+            return
         self.inserir_veiculo(placa, opcao, aquisicao, data_legalizacao, categoria)
         return
     def testar_placa(self, placa):
@@ -356,15 +373,12 @@ class Menu(Frame):
             data_legalizacao = data_legalizacao.strftime('%d/%m/%Y')
             ultima_legalizacao = ultima_legalizacao.strftime('%d/%m/%Y')
         aquisicao = aquisicao.strftime('%d/%m/%Y')
-        if self.testar_placa(placa) == True:
-            self.mensagem_add['text'] = "Veiculo já cadastrado!"
-            return
-        else:
-            query_inserir = 'INSERT INTO automoveis (placa, tipo, categoria, disponibilidade, utilizacoes, data_de_aquisicao, primeira_legalizacao, ultima_legalizacao, proxima_legalizacao) VALUES (?,?,?,?,?,?,?,?,?)'
-            parametros_inserir = placa.upper(), opcao, categoria, disponibilidade, utilizacoes, aquisicao, data_legalizacao, ultima_legalizacao, proxima_legalizacao
-            self.db_consulta(query_inserir, parametros_inserir)
-            self.mensagem_add['text'] = "Veiculo inserido com sucesso!"
-            self.tabela_pag_veiculos()
+        query_inserir = 'INSERT INTO automoveis (placa, tipo, categoria, disponibilidade, utilizacoes, data_de_aquisicao, primeira_legalizacao, ultima_legalizacao, proxima_legalizacao) VALUES (?,?,?,?,?,?,?,?,?)'
+        parametros_inserir = placa.upper(), opcao, categoria, disponibilidade, utilizacoes, aquisicao, data_legalizacao, ultima_legalizacao, proxima_legalizacao
+        self.db_consulta(query_inserir, parametros_inserir)
+        self.mensagem_add['text'] = "Veiculo inserido com sucesso!"
+        self.tabela_pag_veiculos()
+
     def tabela_pag_veiculos(self):
         self.tabela.delete(*self.tabela.get_children())
         query = 'SELECT id_veiculo, placa, tipo, categoria, disponibilidade, disponivel_em FROM automoveis ORDER BY id_veiculo ASC'
@@ -380,12 +394,13 @@ class Menu(Frame):
     def pesquisar_veiculo(self):
         self.janela_pesquisar = Toplevel()
         self.janela_pesquisar.title("Pesquisar Veiculo")
+        self.janela_pesquisar.wm_iconbitmap("recursos/lupa.ico")
         self.janela_pesquisar.resizable(FALSE,FALSE)
         self.janela_pesquisar.geometry("600x150+500+200")
         self.frame_pesquisar = Frame(self.janela_pesquisar)
         self.lb_id = Label(self.frame_pesquisar, text="ID ou PLACA", font="sylfaen 10 bold" )
         self.ent_id = Entry(self.frame_pesquisar)
-        self.bttm_id = Button(self.frame_pesquisar, text="OK", font="sylfaen 10 bold", command=lambda: self.povoar_tabela(self.ent_id.get()))
+        self.bttm_id = Button(self.frame_pesquisar, cursor='hand2',text="OK", font="sylfaen 10 bold", bd=5, relief="raised", bg='#B0E0E6', command=lambda: self.retorno_pesquisa(self.ent_id.get()))
         self.mensagem_erro = Label(self.frame_pesquisar, text=" ", font="sylfaen 10 bold", fg='red')
 
         self.tabela_pesquisa = ttk.Treeview(self.frame_pesquisar, columns=('ID', 'placa', 'tipo', 'categoria', 'status',
@@ -411,7 +426,7 @@ class Menu(Frame):
         self.tabela_pesquisa.grid(row=3, columnspan=3)
         self.frame_pesquisar.pack()
 
-    def povoar_tabela(self, ok):
+    def retorno_pesquisa(self, ok):
         self.tabela_pesquisa.delete(*self.tabela_pesquisa.get_children())
         query_pesquisa = ('SELECT id_veiculo, placa, tipo, categoria, disponibilidade, disponivel_em, '
                           'utilizacoes FROM automoveis WHERE id_veiculo = ? OR placa = ?')
@@ -436,7 +451,8 @@ class Menu(Frame):
     def legalizar_page(self):
         legalizar = Frame(self.frame2)
         frame_legalizar = LabelFrame(legalizar, text="LEGALIZAR", font="sylfaen 16 bold")
-        self.tv_legalizar = ttk.Treeview(frame_legalizar, columns=('id', 'placa', 'data_de_aquisicao', 'ultima_legalizacao', 'proxima_legalizacao', 'dias_proxima_legalizacao'), height=17, show='headings')
+        self.tv_legalizar = ttk.Treeview(frame_legalizar, columns=('id', 'placa', 'data_de_aquisicao',
+                'ultima_legalizacao', 'proxima_legalizacao', 'dias_proxima_legalizacao'), height=17, show='headings')
         self.tv_legalizar.column('id', minwidth=0, width=50)
         self.tv_legalizar.column('placa', minwidth=0, width=70)
         self.tv_legalizar.column('data_de_aquisicao', minwidth=0, width=150)
@@ -449,25 +465,43 @@ class Menu(Frame):
         self.tv_legalizar.heading('ultima_legalizacao', text='ULTIMA LEGALIZAÇÃO')
         self.tv_legalizar.heading('proxima_legalizacao', text='PRÓXIMA LEGALIZAÇÃO')
         self.tv_legalizar.heading('dias_proxima_legalizacao', text='DIAS RESTANTES')
+
         frame_atualizar_status = LabelFrame(legalizar, text="Atualizar status", font="sylfaen 12 bold")
         self.label_id_legalizar = Label(frame_atualizar_status, text="ID do veiculo:", font="sylfaen 12")
         self.entry_id_legalizar = Entry(frame_atualizar_status)
         self.label_data_legalizar = Label(frame_atualizar_status, text="Data da legalização:", font="sylfaen 12")
         self.entry_data_legalizar = Entry(frame_atualizar_status)
         self.entry_data_legalizar.insert(0,"DD/MM/AAAA")
-        self.button_confirm_legalizar = Button(frame_atualizar_status, text="confirmar")
+        self.check_valor2 = IntVar()
+        self.check_data_atual = Checkbutton(frame_atualizar_status, text="Data atual", variable=self.check_valor2,
+                                            offvalue=0, onvalue=1, command=self.data_atual)
+        self.mensagem_legalizacao = Label(frame_atualizar_status, text="", font="sylfaen 12 bold", fg='red' )
+        self.button_confirm_legalizar = Button(frame_atualizar_status, bd=5, cursor='hand2', relief="raised", bg='#B0E0E6',
+                                               text="confirmar", font="sylfaen 12 bold", command=lambda:self.atualizar_legalizacao(self.entry_data_legalizar.get(), self.entry_id_legalizar.get()))
 
 
-        self.tv_legalizar.grid(row=2, column=1)
+        self.tv_legalizar.grid(row=2, column=1, padx=8)
         self.tabela_legalizar()
         frame_atualizar_status.grid(row=3)
         self.label_id_legalizar.grid(row=1, column=0)
         self.entry_id_legalizar.grid(row=1, column=1)
         self.label_data_legalizar.grid(row=2, column=0)
         self.entry_data_legalizar.grid(row=2, column=1)
-        self.button_confirm_legalizar.grid(row=3, column=0, columnspan=2)
+        self.check_data_atual.grid(row=2, column=2)
+        self.mensagem_legalizacao.grid(row=3, column=0, columnspan=2)
+        self.button_confirm_legalizar.grid(row=4, column=0, columnspan=2)
         frame_legalizar.grid(row=1)
         legalizar.pack(expand=TRUE, fill=BOTH)
+    def data_atual(self):
+        hoje = datetime.now()
+        hoje = hoje.strftime("%d/%m/%Y")
+        if self.check_valor2.get() == 1:
+            self.entry_data_legalizar.delete(0,11)
+            self.entry_data_legalizar.insert(0,hoje)
+        if self.check_valor2.get() == 0:
+            self.entry_data_legalizar.delete(0,11)
+            self.entry_data_legalizar.insert(0,"DD/MM/AAAA")
+
     def tabela_legalizar(self):
         self.tv_legalizar.delete(*self.tv_legalizar.get_children())
         data_atual = datetime.now()
@@ -483,21 +517,46 @@ class Menu(Frame):
             dias_proxima_legalizacao.append(i - data_atual)
         for dias, id in zip(dias_proxima_legalizacao, ids_veiculos):
             dias = dias.days
-            dias = 0 if int(dias) < 0 else int(dias)
+            #0 if int(dias) < 0 else
+            dias = int(dias)
             id = id[0]
             query_add_data = 'UPDATE automoveis SET dias_proxima_legalizacao = ? WHERE id_veiculo = ?'
             param = dias, id
             self.db_consulta(query_add_data, param)
-        #for i in dias_proxima_legalizacao:
-
 
         query = 'SELECT id_veiculo, placa, data_de_aquisicao, ultima_legalizacao, proxima_legalizacao, dias_proxima_legalizacao FROM automoveis WHERE dias_proxima_legalizacao <= 10 ORDER BY dias_proxima_legalizacao ASC'
         informacoes = self.db_consulta(query)
 
         for item in informacoes:
             id, placa, data_de_aquisicao, ultima_legalizacao, proxima_legalizacao, dias_proxima_legalizacao = item
-            nome_ultima_legalizacao = "Necessita legalizar" if ultima_legalizacao == None else ultima_legalizacao
-            self.tv_legalizar.insert('', 'end', values=(id, placa, data_de_aquisicao, nome_ultima_legalizacao, proxima_legalizacao, dias_proxima_legalizacao))
+            nome_dias_proxima_legalizacao = "< 24 horas" if dias_proxima_legalizacao == 0 else (f"atrasado "
+                    f"{- dias_proxima_legalizacao} dias") if  dias_proxima_legalizacao < 0 else f"{dias_proxima_legalizacao} dias"
+            nome_ultima_legalizacao = "Primeira legalização" if ultima_legalizacao == None else ultima_legalizacao
+            self.tv_legalizar.insert('', 'end', values=(id, placa, data_de_aquisicao, nome_ultima_legalizacao, proxima_legalizacao, nome_dias_proxima_legalizacao))
+
+    def atualizar_legalizacao(self, ultima, id_veiculo):
+        self.mensagem_legalizacao['text'] = ""
+        id_vazia = True if id_veiculo == '' else False
+        data_vazia = True if ultima == '' else False
+        padrao_data = r'\d{2}/\d{2}/\d{4}'
+        padrao_data_legal = re.match(padrao_data, ultima)
+        if id_vazia:
+            self.mensagem_legalizacao['text'] = "Campo 'ID' obrigatório!"
+            return
+        if data_vazia:
+            self.mensagem_legalizacao['text'] = "Campo 'DATA' obrigatório!"
+            return
+        if not padrao_data_legal:
+            self.mensagem_legalizacao['text'] = "Data informada inválida!"
+            return
+        proxima = datetime.strptime(ultima, "%d/%m/%Y") + timedelta(days=1826)
+        proxima = proxima.strftime("%d/%m/%Y")
+        query_update_legalizacao = ("UPDATE automoveis SET ultima_legalizacao = ?,"
+                                    " proxima_legalizacao = ? WHERE id_veiculo = ?")
+        parametros_update_legalizacao = ultima, proxima, id_veiculo
+        self.db_consulta(query_update_legalizacao, parametros_update_legalizacao)
+        self.mensagem_legalizacao['text'] = "Status atualizado com sucesso!"
+        self.tabela_legalizar()
 
     def db_consulta(self, consulta, parametros=()): #função para acessar a base de dados e fazer consulta
         with sqlite3.connect(self.db_auto) as con:
@@ -508,9 +567,10 @@ class Menu(Frame):
             return dados
 
     def manutencao_page(self):
-        manutencao = Frame(self.frame2,width=900)
-        frame_manutencao = LabelFrame(manutencao, text="VEICULOS EM ALERTA:", font="sylfaen 16 bold", width=800, height=10)
-        self.tv_manutencao = ttk.Treeview(frame_manutencao, columns=('utilizacoes', 'placa', 'tipo', 'disponivel', 'disponivel em'), show='headings')
+        manutencao = Frame(self.frame2)
+        frame_manutencao = LabelFrame(manutencao, text="VEICULOS EM ALERTA:", font="sylfaen 16 bold")
+        self.tv_manutencao = ttk.Treeview(frame_manutencao, columns=('utilizacoes', 'placa', 'tipo', 'disponivel', 'disponivel em'),
+                                          height=13, show='headings')
         self.tv_manutencao.column('utilizacoes', minwidth=0, width=100)
         self.tv_manutencao.column('placa', minwidth=0, width=70)
         self.tv_manutencao.column('tipo', minwidth=0, width=70)
@@ -521,22 +581,44 @@ class Menu(Frame):
         self.tv_manutencao.heading('tipo', text='tipo')
         self.tv_manutencao.heading('disponivel', text='Disponibilidade')
         self.tv_manutencao.heading('disponivel em', text='Disponivel em:')
+        self.label_manutencao = Label(frame_manutencao, text='''Veiculos com 50 utilizações ou perto da data
+         de manutenção ficarão em alerta até serem regularizados''', font='sylfaen 12 bold', fg='blue')
 
-        self.tv_manutencao.grid()
+        self.tv_manutencao.grid(row=0)
+        self.label_manutencao.grid(row=1)
         self.tabela_manutencao()
+
         ################--- ATUALIZAR MANUTENÇÃO ---#####################
-        self.label_manutencao = Label(frame_manutencao, text='''Veiculos com 50 utilizações ou mais deverão ser enviados para manutenção, 
-        após a regularização do veiculo o administrador deve atualizar o status na base de dados.''')
-        self.mensagem_atualizar = Label(frame_manutencao, text='')
-        self.manutencao_em_andamento = Button(frame_manutencao, text="Enviado para manutenção", font='sylfaen 12 bold',
-                                              command=self.em_manutencao)
-        self.concluir_manutencao = Button(frame_manutencao, text="Manutenção Concluida", font="sylfaen 12 bold",
-                                          command= self.atualizar_manutencao)
-        self.label_manutencao.grid()
-        self.mensagem_atualizar.grid()
-        self.manutencao_em_andamento.grid()
-        self.concluir_manutencao.grid()
-        frame_manutencao.pack(expand=TRUE, fill=BOTH, pady=20, padx=94)
+        self.frame_att_manutencao = LabelFrame(frame_manutencao, text='Enviar para manutenção', font='sylfaen 12 bold' )
+        self.lb_id_manut = Label(self.frame_att_manutencao, text="ID do veiculo:", font='sylfaen 12 bold')
+        self.ent_id_manut = Entry(self.frame_att_manutencao)
+        self.lb_dias_manut = Label(self.frame_att_manutencao, text="Dias em manutenção:", font='sylfaen 12 bold')
+        self.ent_dias_manut = Entry(self.frame_att_manutencao)
+        self.lb_detalhes_manut = Label(self.frame_att_manutencao, text="Detalhes da manutenção: ", font='sylfaen 12 bold')
+        self.ent_detalhes = Entry(self.frame_att_manutencao)
+        self.lb_data_inicio_manu = Label(self.frame_att_manutencao, text="Data de inicio\n da manutenção:", font='sylfaen 12 bold')
+        self.ent_data_inicio = Entry(self.frame_att_manutencao)
+        self.ent_data_inicio.insert(0,"DD/MM/AAAA")
+        self.check_valor3 = IntVar()
+        self.check_atual = Checkbutton(self.frame_att_manutencao, text="Data atual", font='sylfaen 10 bold', variable=self.check_valor3,
+                                            offvalue=0, onvalue=1, command=self.data_atual_manutencao)
+
+        self.mensagem_atualizar = Label(self.frame_att_manutencao, text='mensagem', font="sylfaen 12 bold", fg='red')
+        self.btt_enviar_manutencao = Button(self.frame_att_manutencao, cursor='hand2', bd=5, relief="raised", bg='#B0E0E6', text="Confirmar", font="sylfaen 12 bold")
+
+        self.lb_id_manut.grid(row=0,column=0, sticky='w')
+        self.ent_id_manut.grid(row=0,column=1, sticky='w')
+        self.lb_dias_manut.grid(row=0,column=2, sticky='w')
+        self.ent_dias_manut.grid(row=0,column=3, sticky='w')
+        self.lb_data_inicio_manu.grid(row=1,column=0)
+        self.ent_data_inicio.grid(row=1,column=1)
+        self.check_atual.grid(row=1, column=2, sticky='w')
+        self.lb_detalhes_manut.grid(row=2,column=0, columnspan=4, padx=10)
+        self.ent_detalhes.grid(row=3,column=0,columnspan=4,rowspan=3, padx=10, sticky='we')
+        self.mensagem_atualizar.grid(row=6,column=0, columnspan=4, sticky='we')
+        self.btt_enviar_manutencao.grid(row=7, column=0, columnspan=4)
+        self.frame_att_manutencao.grid(row=2,column=0,padx=53, sticky='we')
+        frame_manutencao.grid(row=1, padx=20)
         manutencao.pack(expand=TRUE, fill=BOTH)
 
     def tabela_manutencao(self):
@@ -563,6 +645,15 @@ class Menu(Frame):
             self.mensagem_atualizar['text'] = 'Por favor, selecione um produto.'
             return
 
+    def data_atual_manutencao(self):
+        hoje = datetime.now()
+        hoje = hoje.strftime("%d/%m/%Y")
+        if self.check_valor3.get() == 1:
+            self.ent_data_inicio.delete(0,11)
+            self.ent_data_inicio.insert(0,hoje)
+        if self.check_valor3.get() == 0:
+            self.ent_data_inicio.delete(0,11)
+            self.ent_data_inicio.insert(0,"DD/MM/AAAA")
     def em_manutencao(self):
         self.mensagem_atualizar['text'] = ''
         try:
