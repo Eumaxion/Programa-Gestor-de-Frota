@@ -8,7 +8,7 @@ import sqlite3
 
 '''################## CLASSE Window/ JANELA INICIAL ###################################################'''
 class Window:
-    db_auto = 'database/ManagerLuxury.db'# variavel para acessar o banco de dados de usuarios
+    db_auto = 'database/ManagerLuxury.db'# variavel para acessar o banco de dados
     def __init__(self, root): #construtor recebe a rota
         self.janela = root #janela inicial vai receber root
         self.janela.title("Sistema de Gerenciamento de Frota Luxury Wheels")  # Adicionando um titulo a janela principal do programa
@@ -19,12 +19,16 @@ class Window:
         self.janela.resizable(0,0) # impedir que a janela seja aumentada
 
         self.frame_inicial = Frame(self.janela) #Criando o frame inicial que vai receber a tela para login ou sair
-        self.frame = LabelFrame(self.frame_inicial, text="Sistema de Gerenciamento de Frota Luxury Wheels", bd=8, relief="groove", font="sylfaen 15 bold", bg="#E6E6FA") #frame com login ou sair
-        self.login = Button(self.frame, text="Login", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.login) #criando botão de login que vai abrir a janela para inserir os dados de autenticação
+        self.frame = LabelFrame(self.frame_inicial, text="Sistema de Gerenciamento de Frota Luxury Wheels", bd=8,
+                                relief="groove", font="sylfaen 15 bold", bg="#E6E6FA") #frame com login ou sair
+        self.login = Button(self.frame, text="Login", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised",
+                            bg='#B0E0E6', command=self.login) #criando botão de login que vai abrir a janela para inserir os dados de autenticação
         self.login.grid(row=0, column=0, pady=20, padx=200) #posicionando botão login
-        self.cadastrar = Button(self.frame, text="Cadastrar usuário", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.cadastrar)
+        self.cadastrar = Button(self.frame, text="Cadastrar usuário", cursor='hand2', font="sylfaen 15 bold",
+                                bd=5, relief="raised", bg='#B0E0E6', command=self.cadastrar)
         self.cadastrar.grid(row=1, column=0)
-        self.exit = Button(self.frame, text="Sair", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised", bg='#B0E0E6', command=self.exit) #criando botão de sair
+        self.exit = Button(self.frame, text="Sair", cursor='hand2', font="sylfaen 15 bold", bd=5, relief="raised",
+                           bg='#B0E0E6', command=self.exit) #criando botão de sair
         self.exit.grid(row=2, column=0, pady= 20) #posicionando botão de sair
         self.frame.grid(pady=200, padx=200) #posicionando frame
         self.frame_inicial.grid() #posicionado frame inicial
@@ -47,9 +51,10 @@ class Window:
         insert_senha = Entry(frame_cadastro, width=45)
         info_senha = Label(frame_cadastro, text="A senha deve conter no minimo\n8 digitos com letras e numeros.", font="sylfaen 12 italic")
         self.mensagem_cadastro=Label(frame_cadastro, text='', font="sylfaen 13 bold", fg="red")
-        button_insert = Button(frame_cadastro, text="Confirmar dados", cursor='hand2', font="sylfaen 13 bold", command=lambda: self.verificar_cadastro(insert_id.get(), insert_usuario.get(), insert_senha.get(), insert_nome.get()))
+        button_insert = Button(frame_cadastro, text="Confirmar dados", cursor='hand2', font="sylfaen 13 bold",
+                               command=lambda: self.verificar_cadastro(insert_id.get(), insert_usuario.get(), insert_senha.get(), insert_nome.get()))
 
-        id_usuario.grid(row=0)
+        id_usuario.grid(row=0)      ######### Posicionando os widgets na frame.
         insert_id.grid(row=0, column=1)
         nome.grid(row=1)
         insert_nome.grid(row=1, column=1)
@@ -63,11 +68,11 @@ class Window:
         frame_cadastro.pack()
 
     def verificar_cadastro(self, id, usuario, senha, nome):
-        self.mensagem_cadastro['text'] = ''
-        senha_pequena = len(senha) < 8
-        senha_letras = senha.isalpha()
-        senha_numeros = senha.isnumeric()
-        if senha_pequena:
+        self.mensagem_cadastro['text'] = ''     #Limpando a mensagem
+        senha_pequena = len(senha) < 8  #testando se a senha é menor que oito digitos
+        senha_letras = senha.isalpha() #testando se a senha não tem numeros
+        senha_numeros = senha.isnumeric() #testando se a senha não tem letras
+        if senha_pequena:       #fazendo os testes e retornando erro.
             self.mensagem_cadastro['text'] = 'A senha deve conter no minimo 8 letras.'
             return
         elif senha_letras:
@@ -78,13 +83,13 @@ class Window:
             return
         else:
             return self.inserir_usuario(id, usuario, senha, nome)
+            # se tudo estiver de acordo é chamada a função de inserir_usuario
 
     def inserir_usuario(self, id, usuario, senha, nome):
         query_id = "SELECT * FROM usuarios WHERE ID = ? OR usuario = ?"
         parametros1 = id, usuario
         consulta = self.db_consulta(query_id, parametros1)
         resposta = consulta.fetchall()
-        print(resposta)
         try:
             if int(id) == resposta[0][0]:
                 self.mensagem_cadastro['text'] = 'O colaborador com o ID informado\n já está cadastrado.'
@@ -372,9 +377,15 @@ class Menu(Frame):
             proxima_legalizacao = proxima_legalizacao.strftime('%d/%m/%Y')
             data_legalizacao = data_legalizacao.strftime('%d/%m/%Y')
             ultima_legalizacao = ultima_legalizacao.strftime('%d/%m/%Y')
+        ultima_manutencao = None
+        proxima_manutencao = aquisicao + timedelta(days=365)
+        proxima_manutencao = proxima_manutencao.strftime('%d/%m/%Y')
         aquisicao = aquisicao.strftime('%d/%m/%Y')
-        query_inserir = 'INSERT INTO automoveis (placa, tipo, categoria, disponibilidade, utilizacoes, data_de_aquisicao, primeira_legalizacao, ultima_legalizacao, proxima_legalizacao) VALUES (?,?,?,?,?,?,?,?,?)'
-        parametros_inserir = placa.upper(), opcao, categoria, disponibilidade, utilizacoes, aquisicao, data_legalizacao, ultima_legalizacao, proxima_legalizacao
+        query_inserir = ('INSERT INTO automoveis (placa, tipo, categoria, disponibilidade, utilizacoes, data_de_aquisicao, '
+                         'primeira_legalizacao, ultima_legalizacao, proxima_legalizacao, ultima_manutencao, '
+                         'proxima_manutencao) VALUES (?,?,?,?,?,?,?,?,?,?,?)')
+        parametros_inserir = (placa.upper(), opcao, categoria, disponibilidade, utilizacoes, aquisicao, data_legalizacao,
+                              ultima_legalizacao, proxima_legalizacao,ultima_manutencao,proxima_manutencao)
         self.db_consulta(query_inserir, parametros_inserir)
         self.mensagem_add['text'] = "Veiculo inserido com sucesso!"
         self.tabela_pag_veiculos()
@@ -400,7 +411,8 @@ class Menu(Frame):
         self.frame_pesquisar = Frame(self.janela_pesquisar)
         self.lb_id = Label(self.frame_pesquisar, text="ID ou PLACA", font="sylfaen 10 bold" )
         self.ent_id = Entry(self.frame_pesquisar)
-        self.bttm_id = Button(self.frame_pesquisar, cursor='hand2',text="OK", font="sylfaen 10 bold", bd=5, relief="raised", bg='#B0E0E6', command=lambda: self.retorno_pesquisa(self.ent_id.get()))
+        self.bttm_id = Button(self.frame_pesquisar, cursor='hand2',text="OK", font="sylfaen 10 bold", bd=5,
+                              relief="raised", bg='#B0E0E6', command=lambda: self.retorno_pesquisa(self.ent_id.get()))
         self.mensagem_erro = Label(self.frame_pesquisar, text=" ", font="sylfaen 10 bold", fg='red')
 
         self.tabela_pesquisa = ttk.Treeview(self.frame_pesquisar, columns=('ID', 'placa', 'tipo', 'categoria', 'status',
@@ -426,17 +438,16 @@ class Menu(Frame):
         self.tabela_pesquisa.grid(row=3, columnspan=3)
         self.frame_pesquisar.pack()
 
-    def retorno_pesquisa(self, ok):
+    def retorno_pesquisa(self, informacao):
         self.tabela_pesquisa.delete(*self.tabela_pesquisa.get_children())
         query_pesquisa = ('SELECT id_veiculo, placa, tipo, categoria, disponibilidade, disponivel_em, '
                           'utilizacoes FROM automoveis WHERE id_veiculo = ? OR placa = ?')
-        if len(ok) == 0:
+        if len(informacao) == 0:
             self.mensagem_erro['text'] = 'Inserir informação!'
             return
-        ok = ok.upper()
-        id_parametro = ok, ok
+        informacao = informacao.upper()
+        id_parametro = informacao, informacao
         registros_db = self.db_consulta(query_pesquisa, id_parametro)
-        print(registros_db)
         if registros_db == []:
             self.mensagem_erro['text'] = 'Veiculo não encontrado!'
             return
@@ -446,7 +457,6 @@ class Menu(Frame):
                 id_veiculo, placa, tipo, categoria, disponibilidade, disponivel_em, utilizacoes = item
                 nome_tipo = 'Carro' if tipo == '0' else 'Moto'
                 self.tabela_pesquisa.insert('', END, values=(id_veiculo, placa, nome_tipo, categoria, disponibilidade, disponivel_em, utilizacoes))
-
 
     def legalizar_page(self):
         legalizar = Frame(self.frame2)
@@ -492,6 +502,7 @@ class Menu(Frame):
         self.button_confirm_legalizar.grid(row=4, column=0, columnspan=2)
         frame_legalizar.grid(row=1)
         legalizar.pack(expand=TRUE, fill=BOTH)
+
     def data_atual(self):
         hoje = datetime.now()
         hoje = hoje.strftime("%d/%m/%Y")
@@ -504,35 +515,35 @@ class Menu(Frame):
 
     def tabela_legalizar(self):
         self.tv_legalizar.delete(*self.tv_legalizar.get_children())
-        data_atual = datetime.now()
-        dias_proxima_legalizacao = []
-        query_datas = 'SELECT proxima_legalizacao FROM automoveis'
-        query_ids = 'SELECT id_veiculo FROM automoveis'
+        data_atual = datetime.today()
+        informacoes = []
+        query_datas = ('SELECT id_veiculo, placa, data_de_aquisicao, ultima_legalizacao, proxima_legalizacao '
+                       ' FROM automoveis ')
         datas_proxima_legalizacao = self.db_consulta(query_datas)
-        ids_veiculos = self.db_consulta(query_ids)
         for i in datas_proxima_legalizacao:
-            i = str(i)
-            i = i[2:12]
-            i = datetime.strptime(str(i), '%d/%m/%Y')
-            dias_proxima_legalizacao.append(i - data_atual)
-        for dias, id in zip(dias_proxima_legalizacao, ids_veiculos):
-            dias = dias.days
-            #0 if int(dias) < 0 else
-            dias = int(dias)
-            id = id[0]
-            query_add_data = 'UPDATE automoveis SET dias_proxima_legalizacao = ? WHERE id_veiculo = ?'
-            param = dias, id
-            self.db_consulta(query_add_data, param)
-
-        query = 'SELECT id_veiculo, placa, data_de_aquisicao, ultima_legalizacao, proxima_legalizacao, dias_proxima_legalizacao FROM automoveis WHERE dias_proxima_legalizacao <= 10 ORDER BY dias_proxima_legalizacao ASC'
-        informacoes = self.db_consulta(query)
-
+            data_proxima = datetime.strptime(i[4], "%d/%m/%Y")
+            dias = data_proxima - data_atual
+            if dias.days <= 10:
+                i = list(i)
+                i.append(dias.days + 1)
+                informacoes.append(i)
         for item in informacoes:
             id, placa, data_de_aquisicao, ultima_legalizacao, proxima_legalizacao, dias_proxima_legalizacao = item
             nome_dias_proxima_legalizacao = "< 24 horas" if dias_proxima_legalizacao == 0 else (f"atrasado "
-                    f"{- dias_proxima_legalizacao} dias") if  dias_proxima_legalizacao < 0 else f"{dias_proxima_legalizacao} dias"
+                    f"{- dias_proxima_legalizacao} dia") if dias_proxima_legalizacao == -1 else (f"atrasado "
+                    f"{- dias_proxima_legalizacao} dias") if dias_proxima_legalizacao < -1 else (f"{dias_proxima_legalizacao}"
+                    f" dia") if dias_proxima_legalizacao == 1 else f"{dias_proxima_legalizacao} dias"
             nome_ultima_legalizacao = "Primeira legalização" if ultima_legalizacao == None else ultima_legalizacao
             self.tv_legalizar.insert('', 'end', values=(id, placa, data_de_aquisicao, nome_ultima_legalizacao, proxima_legalizacao, nome_dias_proxima_legalizacao))
+
+    def testar_id(self, id):
+        query_placa = "SELECT id_veiculo FROM automoveis WHERE id_veiculo = ?"
+        parametro_placa = [id]
+        retorno = self.db_consulta(query_placa, parametro_placa)
+        if len(retorno) != 0:
+            return True
+        else:
+            return False
 
     def atualizar_legalizacao(self, ultima, id_veiculo):
         self.mensagem_legalizacao['text'] = ""
@@ -548,6 +559,9 @@ class Menu(Frame):
             return
         if not padrao_data_legal:
             self.mensagem_legalizacao['text'] = "Data informada inválida!"
+            return
+        if self.testar_id(id_veiculo) == False:
+            self.mensagem_legalizacao['text'] = "Veiculo não encontrado!"
             return
         proxima = datetime.strptime(ultima, "%d/%m/%Y") + timedelta(days=1826)
         proxima = proxima.strftime("%d/%m/%Y")
@@ -569,18 +583,22 @@ class Menu(Frame):
     def manutencao_page(self):
         manutencao = Frame(self.frame2)
         frame_manutencao = LabelFrame(manutencao, text="VEICULOS EM ALERTA:", font="sylfaen 16 bold")
-        self.tv_manutencao = ttk.Treeview(frame_manutencao, columns=('utilizacoes', 'placa', 'tipo', 'disponivel', 'disponivel em'),
-                                          height=13, show='headings')
-        self.tv_manutencao.column('utilizacoes', minwidth=0, width=100)
-        self.tv_manutencao.column('placa', minwidth=0, width=70)
-        self.tv_manutencao.column('tipo', minwidth=0, width=70)
-        self.tv_manutencao.column('disponivel', minwidth=0, width=100)
-        self.tv_manutencao.column('disponivel em', minwidth=0, width=100)
-        self.tv_manutencao.heading('utilizacoes', text='nº de utilizações')
-        self.tv_manutencao.heading('placa', text='Placa')
-        self.tv_manutencao.heading('tipo', text='tipo')
-        self.tv_manutencao.heading('disponivel', text='Disponibilidade')
-        self.tv_manutencao.heading('disponivel em', text='Disponivel em:')
+        self.tv_manutencao = ttk.Treeview(frame_manutencao, columns=('id_veiculo', 'placa', 'status','ultima',
+                                                                     'proxima', 'n_utilizacoes', 'dias'), height=13, show='headings')
+        self.tv_manutencao.column('id_veiculo', minwidth=0, width=40)
+        self.tv_manutencao.column('placa', minwidth=0, width=80)
+        self.tv_manutencao.column('status', minwidth=0, width=100)
+        self.tv_manutencao.column('ultima', minwidth=0, width=120)
+        self.tv_manutencao.column('proxima', minwidth=0, width=100)
+        self.tv_manutencao.column('n_utilizacoes', minwidth=0, width=80)
+        self.tv_manutencao.column('dias', minwidth=0, width=100)
+        self.tv_manutencao.heading('id_veiculo', text='ID')
+        self.tv_manutencao.heading('placa', text='PLACA')
+        self.tv_manutencao.heading('status', text='STATUS')
+        self.tv_manutencao.heading('ultima', text='ULTIMA MAN.')
+        self.tv_manutencao.heading('proxima', text='PRÓXIMA MAN.')
+        self.tv_manutencao.heading('n_utilizacoes', text='UTILIZAÇÕES')
+        self.tv_manutencao.heading('dias', text='PRÓXIMA MANUTENÇÃO EM')
         self.label_manutencao = Label(frame_manutencao, text='''Veiculos com 50 utilizações ou perto da data
          de manutenção ficarão em alerta até serem regularizados''', font='sylfaen 12 bold', fg='blue')
 
@@ -591,7 +609,7 @@ class Menu(Frame):
         ################--- ATUALIZAR MANUTENÇÃO ---#####################
         self.frame_att_manutencao = LabelFrame(frame_manutencao, text='Enviar para manutenção', font='sylfaen 12 bold' )
         self.lb_id_manut = Label(self.frame_att_manutencao, text="ID do veiculo:", font='sylfaen 12 bold')
-        self.ent_id_manut = Entry(self.frame_att_manutencao)
+        self.ent_id_veic = Entry(self.frame_att_manutencao)
         self.lb_dias_manut = Label(self.frame_att_manutencao, text="Dias em manutenção:", font='sylfaen 12 bold')
         self.ent_dias_manut = Entry(self.frame_att_manutencao)
         self.lb_detalhes_manut = Label(self.frame_att_manutencao, text="Detalhes da manutenção: ", font='sylfaen 12 bold')
@@ -604,10 +622,16 @@ class Menu(Frame):
                                             offvalue=0, onvalue=1, command=self.data_atual_manutencao)
 
         self.mensagem_atualizar = Label(self.frame_att_manutencao, text='mensagem', font="sylfaen 12 bold", fg='red')
-        self.btt_enviar_manutencao = Button(self.frame_att_manutencao, cursor='hand2', bd=5, relief="raised", bg='#B0E0E6', text="Confirmar", font="sylfaen 12 bold")
+        self.btt_enviar_manutencao = Button(self.frame_att_manutencao, cursor='hand2', bd=5, relief="raised", bg='#B0E0E6',
+                                text="Confirmar", font="sylfaen 12 bold", command=lambda: self.atualizar_manutencao
+            (self.ent_id_veic.get(), self.ent_dias_manut.get(), self.ent_data_inicio.get(), self.ent_detalhes.get()))
+        icone_pesquisa = tkinter.PhotoImage(file='recursos/magnifying_glass.png')
+        self.buttom_pesquisar_manutencao = Button(self.frame_att_manutencao, cursor='hand2', text='Pesquisar\nveiculo', font="sylfaen 10 bold", image=icone_pesquisa,
+                                       compound='left', background='#B0E0E6', command=self.pesquisar_manutencao)
+        self.buttom_pesquisar_manutencao.image = icone_pesquisa
 
         self.lb_id_manut.grid(row=0,column=0, sticky='w')
-        self.ent_id_manut.grid(row=0,column=1, sticky='w')
+        self.ent_id_veic.grid(row=0,column=1, sticky='w')
         self.lb_dias_manut.grid(row=0,column=2, sticky='w')
         self.ent_dias_manut.grid(row=0,column=3, sticky='w')
         self.lb_data_inicio_manu.grid(row=1,column=0)
@@ -615,6 +639,7 @@ class Menu(Frame):
         self.check_atual.grid(row=1, column=2, sticky='w')
         self.lb_detalhes_manut.grid(row=2,column=0, columnspan=4, padx=10)
         self.ent_detalhes.grid(row=3,column=0,columnspan=4,rowspan=3, padx=10, sticky='we')
+        self.buttom_pesquisar_manutencao.grid(row=1, column=3, rowspan=2, padx=5, sticky='e')
         self.mensagem_atualizar.grid(row=6,column=0, columnspan=4, sticky='we')
         self.btt_enviar_manutencao.grid(row=7, column=0, columnspan=4)
         self.frame_att_manutencao.grid(row=2,column=0,padx=53, sticky='we')
@@ -623,27 +648,146 @@ class Menu(Frame):
 
     def tabela_manutencao(self):
         self.tv_manutencao.delete(*self.tv_manutencao.get_children())
-        query = 'SELECT utilizacoes,placa, tipo, disponibilidade, disponivel_em FROM automoveis WHERE utilizacoes >= 10 ORDER BY utilizacoes DESC'
-        informacoes = self.db_consulta(query)
+        data_atual = datetime.today()
+        informacoes = []
+        query_dados_manutencao = ('SELECT id_veiculo, placa, disponibilidade, ultima_manutencao, proxima_manutencao, utilizacoes '
+                                  'FROM automoveis ORDER BY utilizacoes DESC')
+        datas_proxima_manutencao = self.db_consulta(query_dados_manutencao)
+        for item in datas_proxima_manutencao:
+            data_proxima = datetime.strptime(item[4], "%d/%m/%Y")
+            dias = data_proxima - data_atual
+            if item[5] >= 50:
+                item = list(item)
+                item.append(dias.days + 1)
+                informacoes.append(item)
+            elif dias.days <= 10:
+                item = list(item)
+                item.append(dias.days + 1)
+                informacoes.append(item)
         for item in informacoes:
-            self.tv_manutencao.insert('', 'end', values=item)
-    def atualizar_manutencao(self):
-        self.mensagem_atualizar['text'] = ''
-        try:
-            item_selecionado = self.tv_manutencao.selection()[0]
-            placa_item = self.tv_manutencao.item(item_selecionado, 'values')
-            if placa_item[3] == 'em manutenção':
-                query = 'UPDATE automoveis SET disponibilidade = "disponivel", utilizacoes = 0 WHERE placa = ?'
-                self.db_consulta(query, (placa_item[1],))
-                self.mensagem_atualizar['text'] = f'Manutenção do veiculo de placa {placa_item[1]} concluida com sucesso!'
-                self.tabela_manutencao()
-            elif placa_item[3] == 'disponivel':
-                self.mensagem_atualizar['text'] = 'O status do veiculo precisa estar "em manutenção" antes de conclui-la.'
-            else:
-                self.mensagem_atualizar['text'] = 'O veiculo está em uso, não é possivel atualizar o status.'
-        except IndexError as e:
-            self.mensagem_atualizar['text'] = 'Por favor, selecione um produto.'
+            id, placa, disponibilidade, ultima_m, proxi, utl, dias = item
+            dias = "< 24 horas" if dias == 0 else (f"atrasado "
+                    f"{- dias} dia") if dias == -1 else (f"atrasado "
+                    f"{- dias} dias") if dias < -1 else (f"{dias}"
+                    f" dia") if dias == 1 else f"{dias} dias"
+            ultima_m = "sem registro" if ultima_m == None else ultima_m
+            self.tv_manutencao.insert('', 'end', values= (id, placa, disponibilidade, ultima_m, proxi, utl, dias))
+
+    def atualizar_manutencao(self,ent_id_veic, ent_dias_manut, dt_inicio, detalhes):
+        self.mensagem_atualizar['text'] = ""
+        id_vazia = True if ent_id_veic == '' else False
+        dias_vazia = True if ent_dias_manut == '' else False
+        print(type(ent_dias_manut))
+        data_vazia = True if dt_inicio == '' else False
+        padrao_data = r'\d{2}/\d{2}/\d{4}'
+        padrao_data_manut = re.match(padrao_data, dt_inicio)
+        ###############verificar placa############
+        if id_vazia:
+            self.mensagem_atualizar['text'] = "Campo 'ID' obrigatório!"
             return
+        if dias_vazia:
+            self.mensagem_atualizar['text'] = "Campo 'Dias em manutenção' obrigatório!"
+            return
+        try:
+            int(ent_dias_manut)
+        except ValueError as e:
+            self.mensagem_atualizar['text'] = "Campo 'Dias em manutenção' incorreto!"
+            return
+        if data_vazia:
+            self.mensagem_atualizar['text'] = "Campo 'DATA' obrigatório!"
+            return
+        if not padrao_data_manut:
+            self.mensagem_atualizar['text'] = "Data informada inválida!"
+            return
+        query_update_manutencao = "INSERT INTO manutencao (veiculo, detalhes, data, duracao) VALUES (?,?,?,?)"
+        parametros_update_manutencao = ent_id_veic, detalhes, dt_inicio, ent_dias_manut
+        self.db_consulta(query_update_manutencao, parametros_update_manutencao)
+
+        dt_inicio = datetime.strptime(dt_inicio, '%d/%m/%Y')
+        ocupado_ate = dt_inicio + timedelta(int(ent_dias_manut))
+        proxima_manu = ocupado_ate + timedelta(365)
+        dt_inicio = dt_inicio.strftime('%d/%m/%Y')
+        ocupado_ate = ocupado_ate.strftime('%d/%m/%Y')
+        proxima_manu = proxima_manu.strftime('%d/%m/%Y')
+        query_update_veic = ("UPDATE automoveis SET disponibilidade = 'em manutencao', utilizacoes = 0, disponivel_em = ?,"
+                             "ultima_manutencao = ?, proxima_manutencao = ? WHERE id_veiculo = ?")
+        parametros_update_veic = ocupado_ate,dt_inicio,proxima_manu,ent_id_veic
+        self.db_consulta(query_update_veic, parametros_update_veic)
+        self.mensagem_atualizar['text'] = "Status atualizado com sucesso!"
+        self.tabela_manutencao()
+
+    def pesquisar_manutencao(self):
+        self.janela_pesquisar_m = Toplevel()
+        self.janela_pesquisar_m.title("Pesquisar manutenções")
+        self.janela_pesquisar_m.wm_iconbitmap("recursos/lupa.ico")
+        self.janela_pesquisar_m.resizable(FALSE,FALSE)
+        self.janela_pesquisar_m.geometry("600x300+500+200")
+        self.frame_pesquisar_m = Frame(self.janela_pesquisar_m)
+        self.lb_id_m = Label(self.frame_pesquisar_m, text="ID ou PLACA", font="sylfaen 10 bold" )
+        self.lb_id_manutencao_m = Label(self.frame_pesquisar_m, text="ID manutenção", font="sylfaen 10 bold")
+        self.ent_id_m = Entry(self.frame_pesquisar_m)
+        self.ent_id_manutencao = Entry(self.frame_pesquisar_m)
+        self.bttm_id_m = Button(self.frame_pesquisar_m, cursor='hand2',text="OK", font="sylfaen 10 bold", bd=5,
+                                relief="raised", bg='#B0E0E6',
+                                command= lambda: self.buscar_manutencoes(self.ent_id_m.get(), self.ent_id_manutencao.get()))
+        self.mensagem_erro_m = Label(self.frame_pesquisar_m, text=" ", font="sylfaen 10 bold", fg='red')
+
+        self.tabela_pesquisa_m = ttk.Treeview(self.frame_pesquisar_m, columns=('id_veiculo', 'id_manutencao', 'placa',
+                                                            'detalhes', 'data', 'duracao'), height=8, show='headings' )
+        self.tabela_pesquisa_m.column('id_veiculo', minwidth=0, width=90)
+        self.tabela_pesquisa_m.column('id_manutencao', minwidth=0,width=90)
+        self.tabela_pesquisa_m.column('placa', minwidth=0, width=70)
+        self.tabela_pesquisa_m.column('detalhes', minwidth=0, width=180)
+        self.tabela_pesquisa_m.column('data', minwidth=0, width=90)
+        self.tabela_pesquisa_m.column('duracao', minwidth=0, width=70)
+        self.tabela_pesquisa_m.heading('id_veiculo', text='ID Veiculo')
+        self.tabela_pesquisa_m.heading('id_manutencao', text='ID Manutencao')
+        self.tabela_pesquisa_m.heading('placa', text='PLACA')
+        self.tabela_pesquisa_m.heading('detalhes', text='detalhes')
+        self.tabela_pesquisa_m.heading('data', text='INICIO')
+        self.tabela_pesquisa_m.heading('duracao', text='Duração')
+        self.lb_id_m.grid(row=0, column=0, padx=5, sticky='E')
+        self.lb_id_manutencao_m.grid(row=1, column=0, padx=5, sticky='E')
+        self.ent_id_m.grid(row=0, column=1, padx=5, sticky='WE')
+        self.ent_id_manutencao.grid(row=1, column=1, padx=5, sticky='WE')
+
+        self.bttm_id_m.grid(row=0, column=2, rowspan=2, padx=5, sticky='W')
+        self.mensagem_erro_m.grid(row=2, column=0, columnspan=2)
+        self.tabela_pesquisa_m.grid(row=3, columnspan=3)
+        self.frame_pesquisar_m.pack()
+
+    def buscar_manutencoes(self, id_placa, id_m):
+        self.tabela_pesquisa_m.delete(*self.tabela_pesquisa_m.get_children())
+        registros_db = []
+        if len(id_placa) == 0 and len(id_m) == 0:
+            self.mensagem_erro_m['text'] = 'Inserir informação!'
+            return
+        if len(id_placa) != 0:
+            query_pesquisa = ('SELECT id_veiculo, id_manutencao, placa, detalhes, data, duracao FROM automoveis '
+                              'LEFT JOIN manutencao ON automoveis.id_veiculo = manutencao.veiculo WHERE id_veiculo = ? OR placa = ?')
+            id_placa = id_placa.upper()
+            id_parametro = id_placa, id_placa
+            registros_db = self.db_consulta(query_pesquisa, id_parametro)
+            if registros_db == []:
+                self.mensagem_erro_m['text'] = 'Não há veiculo com os dados informados!'
+                return
+        elif len(id_m) != 0:
+            query_pesquisa = ('SELECT id_veiculo, id_manutencao, placa, detalhes, data, duracao FROM automoveis '
+                              'LEFT JOIN manutencao ON automoveis.id_veiculo = manutencao.veiculo WHERE id_manutencao = ?')
+            id_parametro = [id_m]
+            registros_db = self.db_consulta(query_pesquisa, id_parametro)
+            if registros_db == []:
+                self.mensagem_erro_m['text'] = 'Manutenção não encontrada!'
+                return
+        self.mensagem_erro_m['text'] = ''
+        for item in registros_db:
+            id_veiculo, id_manutencao, placa, detalhes, data, duracao = item
+            id_manutencao = '' if id_manutencao == None else id_manutencao
+            detalhes = 'SEM REGISTROS ANTERIORES' if detalhes == None else detalhes
+            duracao = '' if duracao == None else f" {duracao} dia" if duracao == 1 else f"{duracao} dias"
+            data = '' if data == None else data
+            duracao = '' if duracao == None else duracao
+            self.tabela_pesquisa_m.insert('', END, values=(id_veiculo, id_manutencao, placa, detalhes, data, duracao))
 
     def data_atual_manutencao(self):
         hoje = datetime.now()
