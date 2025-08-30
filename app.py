@@ -3,8 +3,10 @@ import re
 import tkinter
 from tkinter import ttk
 from tkinter import *
+from tkinter import PhotoImage
 from datetime import *
 import sqlite3
+import os
 
 '''################## CLASSE Window/ JANELA INICIAL ###################################################'''
 class Window:
@@ -13,7 +15,9 @@ class Window:
         self.janela = root #janela inicial vai receber root
         self.janela.title("Sistema de Gerenciamento de Frota Luxury Wheels")  # Adicionando um titulo a janela principal do programa
         self.janela.geometry(f"900x600+200+50")  # redimensionando o tamanho e posição da janela do programa de acordo com o tamanho da tela
-        self.janela.wm_iconbitmap('recursos/icone1.ico')  # alterando o icone da janela
+        caminho_icone = os.path.join(os.path.dirname(__file__), "recursos", "icone1.png")
+        icone = PhotoImage(file=caminho_icone)
+        self.janela.iconphoto(False, icone)  # alterando o icone da janela
         self.janela['bg'] = '#B0E0E6' #alterando a cor de fundo da janela inicial
         #criando frame inicial com botão de login e exit
         self.janela.resizable(0,0) # impedir que a janela seja aumentada
@@ -37,7 +41,8 @@ class Window:
     def cadastrar(self):
         self.janela_cadastro = Toplevel()
         self.janela_cadastro.title("CADASTRAR USUARIO")  # titulo
-        self.janela_cadastro.wm_iconbitmap("recursos/icone2.ico")  # mudando o icone
+        icon2 = PhotoImage(file="recursos/icone2.png")
+        self.janela_cadastro.iconphoto(False, icon2)  # mudando o icone
         self.janela_cadastro.resizable(FALSE, FALSE)
         self.janela_cadastro.geometry("450x300+400+200")  # tamanho e posição da janela
         frame_cadastro = Frame(self.janela_cadastro)
@@ -110,7 +115,8 @@ class Window:
     def login(self):
         self.janela_login = Toplevel()  # abrindo a tela de login em uma janela menor
         self.janela_login.title("LOGIN") #titulo
-        self.janela_login.wm_iconbitmap("recursos/icone2.ico") #mudando o icone
+        icon3 = PhotoImage(file="recursos/icone2.png")
+        self.janela_login.iconphoto(False, icon3) #mudando o icone
         self.janela_login.resizable(FALSE, FALSE)
         self.janela_login.geometry("250x150+500+200") #tamanho e posição da janela
         frame_login = Frame(self.janela_login)
@@ -481,7 +487,8 @@ class Menu(Frame):
         #JANELA PARA FAZER A PESQUISA DOS VEICULOS
         self.janela_pesquisar = Toplevel()
         self.janela_pesquisar.title("Pesquisar Veiculo") #titulo
-        self.janela_pesquisar.wm_iconbitmap("recursos/lupa.ico") #icone
+        icon_lupa2 = PhotoImage(file="recursos/lupa-1.png")
+        self.janela_pesquisar.iconphoto(False, icon_lupa2) #icone
         self.janela_pesquisar.resizable(FALSE,FALSE) #impedir que a janela seja maximizada
         self.janela_pesquisar.geometry("600x150+500+200") #tamanho e local onde a janela abrirá
         #INSERINDO FRAMES E WIDGETS NA JANELA
@@ -821,7 +828,8 @@ class Menu(Frame):
         #JANELA PARA PESQUISAR MANUTENÇÕES DOS VEICULOS
         self.janela_pesquisar_m = Toplevel()
         self.janela_pesquisar_m.title("Pesquisar manutenções") #titulo da janela
-        self.janela_pesquisar_m.wm_iconbitmap("recursos/lupa.ico") #icone
+        icon_lupa = PhotoImage(file="recursos/lupa")
+        self.janela_pesquisar_m.iconphoto(False, icon_lupa) #icone
         self.janela_pesquisar_m.resizable(FALSE,FALSE) #impedir que a janela seja redimensionada
         self.janela_pesquisar_m.geometry("600x300+500+200") #posicionamento e tamanho da janela
 
