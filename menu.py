@@ -365,6 +365,10 @@ class Menu(Frame):
         self.bttm_id.grid(row=0, column=2, padx=5, sticky='W')
         self.mensagem_erro.grid(row=2, column=0, columnspan=2)
         self.tabela_pesquisa.grid(row=3, columnspan=3)
+        self.janela_pesquisar.bind('<Escape>', lambda event: self.janela_pesquisar.destroy())
+        self.janela_pesquisar.bind('<Return>', lambda event: self.retorno_pesquisa(self.ent_id.get()))
+        self.janela_pesquisar.grab_set()
+        self.ent_id.focus()
         self.frame_pesquisar.pack()
 
     def retorno_pesquisa(self, informacao):
@@ -670,7 +674,7 @@ class Menu(Frame):
         #JANELA PARA PESQUISAR MANUTENÇÕES DOS VEICULOS
         self.janela_pesquisar_m = Toplevel()
         self.janela_pesquisar_m.title("Pesquisar manutenções") #titulo da janela
-        icon_lupa = PhotoImage(file="recursos/lupa")
+        icon_lupa = PhotoImage(file="recursos/lupa-1.png")
         self.janela_pesquisar_m.iconphoto(False, icon_lupa) #icone
         self.janela_pesquisar_m.resizable(False,False) #impedir que a janela seja redimensionada
         self.janela_pesquisar_m.geometry("600x300+500+200") #posicionamento e tamanho da janela
@@ -709,6 +713,10 @@ class Menu(Frame):
         self.bttm_id_m.grid(row=0, column=2, rowspan=2, padx=5, sticky='W')
         self.mensagem_erro_m.grid(row=2, column=0, columnspan=2)
         self.tabela_pesquisa_m.grid(row=3, columnspan=3)
+        self.janela_pesquisar_m.bind('<Escape>', lambda event: self.janela_pesquisar_m.destroy())
+        self.janela_pesquisar_m.bind('<Return>', lambda event: self.buscar_manutencoes(self.ent_id_m.get(), self.ent_id_manutencao.get()))
+        self.janela_pesquisar_m.grab_set()
+        self.ent_id_m.focus()
         self.frame_pesquisar_m.pack()
 
     def buscar_manutencoes(self, id_placa, id_m):
