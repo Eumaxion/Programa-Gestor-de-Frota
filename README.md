@@ -10,6 +10,10 @@ The system allows managing vehicles, legalizations, and maintenance tasks, all t
 It’s object-oriented (POO), with classes representing vehicles, clients, and internal operations — a great learning experience in modular code design.
 
 Although the project is finished and graded, I’m now revisiting it to improve the structure and readability, as I’ve gained more programming experience since its first version.
+## Preview
+
+![App Preview](./recursos/preview.png)
+
 ## Features
 
 Login
@@ -38,9 +42,6 @@ Sair
 
 Two options: Quit or Go back to the start menu
 
-## Preview
-
-![App Preview](recursos/previwe.png)
 ## Usage
 
 On Windows  
